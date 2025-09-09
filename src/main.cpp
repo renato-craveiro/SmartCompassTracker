@@ -19,8 +19,8 @@
 unsigned long lastEEPROM = 0;
 
 void setup() {
-    const char* ssid = "MEO-2BE7F0"; 
-    const char* password = "40ef12f659";
+    const char* ssid = "xxx"; 
+    const char* password = "xxx";
     Serial.begin(115200);
 
     OLEDManager::beginDisplay();

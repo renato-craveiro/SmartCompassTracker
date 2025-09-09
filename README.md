@@ -82,21 +82,6 @@ platformio run --target upload --upload-port COM3
 - Global steps and daily goal are automatically stored in EEPROM.
 - Saves automatically every minute.
 
----
-
-## Adding New Screens
-
-```cpp
-OLEDManager::addScreen([]() {
-    u8g2.setFont(u8g2_font_5x7_tr);
-    u8g2.drawStr(0, 10, "New Screen");
-    u8g2.setCursor(0, 30);
-    u8g2.print("Info: "); u8g2.print(StepsManager::passosAtuais);
-});
-```
-
-- Each screen is a callback function that draws its content.
-- Switch between screens using `OLEDManager::nextScreen()`.
 
 ---
 
