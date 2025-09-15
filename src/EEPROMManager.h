@@ -7,4 +7,5 @@ namespace EEPROMManager {
 
     extern int objetivoDiario;
     extern long passosGlobais;
+    extern float distanciaGlobal;
 }

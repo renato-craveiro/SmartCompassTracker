@@ -11,7 +11,7 @@ void beginDisplay() {
     u8g2.begin();
 }
 
-void update(int passosAtuais, long passosGlobais, int objetivoDiario) {
+void update(int passosAtuais, long passosGlobais, int objetivoDiario, float distanciaAtual, float distanciaGlobal) {
     // Barra de progresso para o objetivo diário
     int progress = map(passosAtuais, 0, objetivoDiario, 0, 128); // 0-128 pixels horizontalmente
     if(progress > 128) progress = 128;
@@ -27,8 +27,8 @@ void update(int passosAtuais, long passosGlobais, int objetivoDiario) {
 
         // Informações principais
         u8g2.setFont(u8g2_font_5x7_tr);
-        u8g2.setCursor(0, 24); u8g2.print("Atuais: "); u8g2.print(passosAtuais);
-        u8g2.setCursor(0, 34); u8g2.print("Globais: "); u8g2.print(passosGlobais);
+        u8g2.setCursor(0, 24); u8g2.print("Atuais: "); u8g2.print(passosAtuais); u8g2.print(" - Dist: "); u8g2.print(distanciaAtual,3); u8g2.print(" km");
+        u8g2.setCursor(0, 34); u8g2.print("Globais: "); u8g2.print(passosGlobais); u8g2.print(" - Dist: "); u8g2.print(distanciaGlobal,3); u8g2.print(" km");
         u8g2.setCursor(0, 44); u8g2.print("Objetivo: "); u8g2.print(objetivoDiario);
         u8g2.setCursor(0, 54); u8g2.print("Hora: "); u8g2.print(Utils::getTime());
 

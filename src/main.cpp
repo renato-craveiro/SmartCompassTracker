@@ -15,15 +15,37 @@
 #include "WebServer.h"
 #include "StepsManager.h"
 #include "utils.h"
+#include "MPUManager.h"
+#include <Wire.h>
+
 
 unsigned long lastEEPROM = 0;
 
+
+
+void clearEEPROM() {
+  EEPROM.begin(512); // Tamanho da EEPROM em bytes (ajusta ao que usas)
+  for (int i = 0; i < 512; i++) {
+    EEPROM.write(i, 0); // ou 0xFF
+  }
+  EEPROM.commit();
+}
+
 void setup() {
-    const char* ssid = "xxx"; 
-    const char* password = "xxx";
+    const char* ssid = "xxxx"; 
+    const char* password = "xxxx";
+    
+    //DEBUG
+    clearEEPROM();
+    //DEBUG
+    
     Serial.begin(115200);
 
+    Wire.begin(4, 5); // SDA=GPIO4, SCL=GPIO5
+
+
     OLEDManager::beginDisplay();
+    MPUManager::init();
     EEPROMManager::load();
     WiFiManager::connect(ssid, password);
     StepsManager::init();
@@ -36,7 +58,7 @@ void loop() {
         EEPROMManager::save();
         lastEEPROM = millis();
     }
-
-    OLEDManager::update(StepsManager::passosAtuais, StepsManager::passosGlobais, StepsManager::objetivoDiario);
+    MPUManager::update();
+    OLEDManager::update(StepsManager::passosAtuais, StepsManager::passosGlobais, StepsManager::objetivoDiario, StepsManager::distanciaAtual, StepsManager::distanciaGlobal);
     delay(1000);
 }
