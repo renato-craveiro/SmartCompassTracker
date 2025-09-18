@@ -1,14 +1,17 @@
 #include <EEPROM.h>
 #include <ArduinoJson.h>
-
+#include "OLEDManager.h"
 namespace EEPROMManager {
-    const int EEPROM_SIZE = 512;  // maior espaço para JSON
-    const int JSON_SIZE = 256;    // tamanho máximo do JSON
+    const int EEPROM_SIZE = 512;  
+    const int JSON_SIZE = 256;    
 
     int objetivoDiario = 5000;
     float passosGlobais = 0;
     float distanciaGlobal = 0;
     //String usuario = "Raoky";
+
+    String wifiSSID = "";
+    String wifiPassword = "";
 
     void begin() {
         EEPROM.begin(EEPROM_SIZE);
@@ -27,8 +30,10 @@ namespace EEPROMManager {
             objetivoDiario = doc["objetivoDiario"] | 5000;
             passosGlobais = doc["passosGlobais"] | 0;
             distanciaGlobal = doc["distanciaGlobal"] | 0;
-            //usuario = String((const char*)doc["usuario"] | "Raoky");
+            wifiSSID = doc["wifiSSID"] | "";
+            wifiPassword = doc["wifiPassword"] | "";
         }
+        
     }
 
     void save() {
@@ -36,7 +41,8 @@ namespace EEPROMManager {
         doc["objetivoDiario"] = objetivoDiario;
         doc["passosGlobais"] = passosGlobais;
         doc["distanciaGlobal"] = distanciaGlobal;
-        //doc["usuario"] = usuario;
+        doc["wifiSSID"] = wifiSSID;
+        doc["wifiPassword"] = wifiPassword;
 
         char jsonBuffer[JSON_SIZE];
         serializeJson(doc, jsonBuffer, JSON_SIZE);

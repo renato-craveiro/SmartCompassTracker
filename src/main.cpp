@@ -18,6 +18,7 @@
 #include "MPUManager.h"
 #include <Wire.h>
 
+#define SWITCH_PIN 14
 
 unsigned long lastEEPROM = 0;
 
@@ -32,13 +33,13 @@ void clearEEPROM() {
 }
 
 void setup() {
-    const char* ssid = "xxxx"; 
-    const char* password = "xxxx";
+    
     
     //DEBUG
-    clearEEPROM();
+    //clearEEPROM();
     //DEBUG
-    
+
+    pinMode(SWITCH_PIN, INPUT_PULLUP);
     Serial.begin(115200);
 
     Wire.begin(4, 5); // SDA=GPIO4, SCL=GPIO5
@@ -47,18 +48,29 @@ void setup() {
     OLEDManager::beginDisplay();
     MPUManager::init();
     EEPROMManager::load();
-    WiFiManager::connect(ssid, password);
+    delay(500);
+    WiFiManager::connect(EEPROMManager::wifiSSID.c_str(), EEPROMManager::wifiPassword.c_str());
     StepsManager::init();
     WebServer::init(); // já inicializa o server dentro do namespace
     Utils::initTime();
 }
 
+unsigned long lastUpdate = 0;
 void loop() {
     if (millis() - lastEEPROM > 60000) {
         EEPROMManager::save();
         lastEEPROM = millis();
     }
-    MPUManager::update();
-    OLEDManager::update(StepsManager::passosAtuais, StepsManager::passosGlobais, StepsManager::objetivoDiario, StepsManager::distanciaAtual, StepsManager::distanciaGlobal);
-    delay(1000);
+    int switchState = digitalRead(SWITCH_PIN);
+    if (switchState == HIGH) {
+        OLEDManager::changeScreen();
+        Serial.println("Switch pressed!");
+    }
+
+    if (millis() - lastUpdate > 1000) {
+        MPUManager::update();
+        OLEDManager::update(StepsManager::passosAtuais, StepsManager::passosGlobais, StepsManager::objetivoDiario, StepsManager::distanciaAtual, StepsManager::distanciaGlobal);
+        lastUpdate = millis();
+    }
+    delay(100);
 }

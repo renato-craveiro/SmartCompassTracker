@@ -3,4 +3,8 @@
 
 namespace WiFiManager {
     void connect(const char* ssid, const char* password);
+    void handleRoot();
+    void handleSave();
+    void startAP();
+
 }
